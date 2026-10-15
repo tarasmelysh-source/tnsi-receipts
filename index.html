@@ -3,131 +3,836 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>TNSI Gas Receipts</title>
 
   <style>
-  * {
-    box-sizing: border-box;
-  }
+    * {
+      box-sizing: border-box;
+    }
 
-  body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f3f5f7;
-    color: #17212b;
-  }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #f4f6f8;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #16212d;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 40px 18px;
+    }
 
-  .page {
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 30px 18px;
-  }
+    .card {
+      width: 100%;
+      max-width: 430px;
+      background: white;
+      border-radius: 18px;
+      padding: 32px 26px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.10);
+    }
 
-  .card {
-    background: #ffffff;
-    border-radius: 14px;
-    padding: 30px 24px;
-    box-shadow: 0 4px 18px rgba(0,0,0,0.08);
-  }
+    h1 {
+      margin: 0 0 10px;
+      text-align: center;
+      font-size: 30px;
+    }
 
-  h1 {
-    margin: 0;
-    text-align: center;
-    font-size: 28px;
-    font-weight: 700;
-  }
+    .intro {
+      margin: 0 0 28px;
+      text-align: center;
+      color: #637083;
+      line-height: 1.45;
+    }
 
-  .intro {
-    text-align: center;
-    color: #64748b;
-    margin: 10px 0 30px;
-    font-size: 15px;
-  }
+    label {
+      display: block;
+      font-weight: 600;
+      margin: 18px 0 7px;
+    }
 
-  .step {
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-    margin-top: 26px;
-    margin-bottom: 12px;
-  }
+    input,
+    select {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #ccd3db;
+      border-radius: 10px;
+      font-size: 16px;
+      background: white;
+    }
 
-  .step-number {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background: #17212b;
-    color: #ffffff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    flex-shrink: 0;
-  }
+    input:focus,
+    select:focus {
+      outline: none;
+      border-color: #617386;
+    }
 
-  .step-title {
-    font-size: 16px;
-    font-weight: 700;
-  }
+    .button {
+      width: 100%;
+      margin-top: 24px;
+      padding: 16px;
+      border: 0;
+      border-radius: 10px;
+      background: #16212d;
+      color: white;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+    }
 
-  .step-description {
-    color: #64748b;
-    font-size: 13px;
-    margin-top: 3px;
-    line-height: 1.4;
-  }
+    .button:disabled {
+      opacity: 0.55;
+      cursor: default;
+    }
 
-  .button {
-    display: block;
-    width: 100%;
-    padding: 15px 18px;
-    background: #17212b;
-    color: white;
-    text-decoration: none;
-    text-align: center;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 600;
-  }
+    #receiptFile {
+      display: none;
+    }
 
-  .button:hover {
-    background: #263746;
-  }
+    .file-name {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #637083;
+      text-align: center;
+      min-height: 18px;
+    }
 
-  .note {
-    text-align: center;
-    margin-top: 28px;
-    color: #94a3b8;
-    font-size: 12px;
-  }
-</style>
+    .status {
+      display: none;
+      margin-top: 22px;
+      padding: 14px;
+      border-radius: 10px;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    .status.working {
+      display: block;
+      background: #eef3f7;
+      color: #33475b;
+    }
+
+    .status.success {
+      display: block;
+      background: #edf8f0;
+      color: #246b38;
+    }
+
+    .status.error {
+      display: block;
+      background: #fff0f0;
+      color: #a32626;
+    }
+
+    .note {
+      margin-top: 26px;
+      text-align: center;
+      font-size: 12px;
+      color: #94a3b8;
+    }
+  </style>
 </head>
 
 <body>
 
-  <div class="page">
-    <div class="card">
+  <div class="card">
 
-      <h1>Submit Gas Receipt</h1>
+    <h1>Submit Gas Receipt</h1>
 
-      <p class="intro">
-        Enter your name when prompted and upload a clear photo of the receipt.
-      </p>
+    <p class="intro">
+      Enter the receipt information and upload a clear photo of your receipt.
+    </p>
 
-      <a class="button"
-       href="https://truescaffold.sharepoint.com/:f:/s/TrueNorth/IgC0mEjZWXAvR42v0HV18zPHATB0zbE34NtXv5cDmOLTg1o"
-       target="_blank"
-       rel="noopener noreferrer">
-       Upload Receipt
-      </a>
+    <label for="employeeName">Employee Name</label>
+    <input
+      id="employeeName"
+      type="text"
+      placeholder="First and last name"
+      autocomplete="name"
+    >
 
-      <div class="note">
-        No TNSI login is required.
-      </div>
+    <label for="unitNumber">Unit Number</label>
+    <input
+      id="unitNumber"
+      type="text"
+      placeholder="Unit number"
+    >
 
+    <label for="jobNumber">Job #</label>
+    <input
+      id="jobNumber"
+      type="text"
+      inputmode="numeric"
+      placeholder="Job number"
+    >
+
+    <label for="paymentMethod">Payment Method</label>
+    <select id="paymentMethod">
+      <option value="">Select payment method</option>
+      <option>Shell Gas Card</option>
+      <option>Personal Card</option>
+      <option>Company Credit Card</option>
+    </select>
+
+    <input
+      id="receiptFile"
+      type="file"
+      accept="image/*,.pdf"
+    >
+
+    <button
+      id="uploadButton"
+      class="button"
+      type="button"
+    >
+      Select Receipt & Upload
+    </button>
+
+    <div id="fileName" class="file-name"></div>
+
+    <div id="status" class="status"></div>
+
+    <div class="note">
+      No TNSI login is required.
     </div>
+
   </div>
+
+
+<script>
+
+  /*
+    ----------------------------------------------------
+    TNSI FILE REQUEST LINK
+    ----------------------------------------------------
+  */
+
+  const FILE_REQUEST_URL =
+    "https://truescaffold.sharepoint.com/:f:/s/TrueNorth/IgC0mEjZWXAvR42v0HV18zPHATB0zbE34NtXv5cDmOLTg1o";
+
+
+  /*
+    ----------------------------------------------------
+    SHAREPOINT SETTINGS
+    ----------------------------------------------------
+  */
+
+  const SP_ROOT =
+    "https://truescaffold.sharepoint.com/sites/TrueNorth";
+
+
+  /*
+    Convert the normal SharePoint sharing URL into
+    Microsoft's u! sharing ID.
+  */
+
+  function makeShareId(url) {
+
+    const bytes =
+      new TextEncoder().encode(url);
+
+    let binary = "";
+
+    bytes.forEach(b => {
+      binary += String.fromCharCode(b);
+    });
+
+    return "u!" +
+      btoa(binary)
+        .replace(/\+/g, "-")
+        .replace(/\//g, "_")
+        .replace(/=+$/g, "");
+  }
+
+
+  const SHARE_ID =
+    makeShareId(FILE_REQUEST_URL);
+
+
+  const permissionUrl =
+    SP_ROOT +
+    "/_api/v2.0/shares/" +
+    SHARE_ID +
+    "/permission";
+
+
+  /*
+    ----------------------------------------------------
+    PAGE CONTROLS
+    ----------------------------------------------------
+  */
+
+  const fileInput =
+    document.getElementById("receiptFile");
+
+  const uploadButton =
+    document.getElementById("uploadButton");
+
+  const statusBox =
+    document.getElementById("status");
+
+  const fileNameBox =
+    document.getElementById("fileName");
+
+
+  function setStatus(type, message) {
+
+    statusBox.className =
+      "status " + type;
+
+    statusBox.textContent =
+      message;
+  }
+
+
+  /*
+    ----------------------------------------------------
+    BUTTON
+
+    Important:
+    file picker must be opened directly by a real click.
+    ----------------------------------------------------
+  */
+
+  uploadButton.addEventListener("click", () => {
+
+    const employeeName =
+      document
+        .getElementById("employeeName")
+        .value
+        .trim();
+
+    const unitNumber =
+      document
+        .getElementById("unitNumber")
+        .value
+        .trim();
+
+    const jobNumber =
+      document
+        .getElementById("jobNumber")
+        .value
+        .trim();
+
+    const paymentMethod =
+      document
+        .getElementById("paymentMethod")
+        .value;
+
+
+    if (!employeeName) {
+      setStatus(
+        "error",
+        "Please enter your name."
+      );
+      return;
+    }
+
+
+    if (!paymentMethod) {
+      setStatus(
+        "error",
+        "Please select a payment method."
+      );
+      return;
+    }
+
+
+    fileInput.click();
+  });
+
+
+  /*
+    ----------------------------------------------------
+    FILE SELECTED
+    ----------------------------------------------------
+  */
+
+  fileInput.addEventListener(
+    "change",
+    async () => {
+
+      const file =
+        fileInput.files[0];
+
+      if (!file)
+        return;
+
+
+      fileNameBox.textContent =
+        file.name;
+
+
+      uploadButton.disabled = true;
+
+      setStatus(
+        "working",
+        "Uploading receipt..."
+      );
+
+
+      try {
+
+        await uploadReceipt(file);
+
+        setStatus(
+          "success",
+          "Receipt uploaded successfully."
+        );
+
+        uploadButton.textContent =
+          "Upload Another Receipt";
+
+        /*
+          Clear file selection so another receipt
+          can be selected.
+        */
+
+        fileInput.value = "";
+
+
+      } catch (error) {
+
+        console.error(error);
+
+        setStatus(
+          "error",
+          "Upload failed. Please try again."
+        );
+
+      } finally {
+
+        uploadButton.disabled = false;
+
+      }
+
+    }
+  );
+
+
+  /*
+    ----------------------------------------------------
+    MAIN UPLOAD PROCESS
+    ----------------------------------------------------
+  */
+
+  async function uploadReceipt(file) {
+
+    const employeeName =
+      document
+        .getElementById("employeeName")
+        .value
+        .trim();
+
+    const unitNumber =
+      document
+        .getElementById("unitNumber")
+        .value
+        .trim();
+
+    const jobNumber =
+      document
+        .getElementById("jobNumber")
+        .value
+        .trim();
+
+    const paymentMethod =
+      document
+        .getElementById("paymentMethod")
+        .value;
+
+
+    /*
+      --------------------------------------------------
+      1. INITIAL BADGER TOKEN
+      --------------------------------------------------
+    */
+
+    const tokenResponse =
+      await fetch(
+        "https://truescaffold.sharepoint.com/_api/v2.1/badger/v1.0/token",
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+
+          body: JSON.stringify({
+            appid:
+              "FileRequestAnonymousUserSignInOnODB"
+          })
+        }
+      );
+
+
+    if (!tokenResponse.ok) {
+      throw new Error(
+        "Initial token failed: " +
+        tokenResponse.status
+      );
+    }
+
+
+    const tokenData =
+      await tokenResponse.json();
+
+
+    /*
+      --------------------------------------------------
+      2. REDEEM FILE REQUEST LINK
+
+      This is the piece we just discovered.
+      --------------------------------------------------
+    */
+
+    const permissionResponse =
+      await fetch(
+        permissionUrl,
+        {
+          method: "GET",
+
+          credentials: "omit",
+
+          headers: {
+
+            "Authorization":
+              "Badger " +
+              tokenData.token,
+
+            "Accept":
+              "application/json",
+
+            "Prefer":
+              "redeemsharinglink",
+
+            "Ignorecookieauthentication":
+              "t",
+
+            "X-Ms-Cc":
+              "t"
+          }
+        }
+      );
+
+
+    if (!permissionResponse.ok) {
+
+      const permissionError =
+        await permissionResponse.text();
+
+      throw new Error(
+        "Permission failed: " +
+        permissionResponse.status +
+        " " +
+        permissionError
+      );
+    }
+
+
+    /*
+      --------------------------------------------------
+      3. TOKEN EXCHANGE
+
+      Microsoft uses the person's name here.
+      --------------------------------------------------
+    */
+
+    const nameParts =
+      employeeName
+        .split(/\s+/);
+
+
+    const givenName =
+      nameParts.shift() || "Employee";
+
+
+    const familyName =
+      nameParts.join(" ") || "Receipt";
+
+
+    const exchangeResponse =
+      await fetch(
+        "https://truescaffold.sharepoint.com/_api/v2.1/badger/v1.0/tokenexchange",
+        {
+          method: "POST",
+
+          credentials: "omit",
+
+          headers: {
+
+            "Authorization":
+              "Badger " +
+              tokenData.token,
+
+            "Content-Type":
+              "application/json",
+
+            "Accept":
+              "application/json",
+
+            "Ignorecookieauthentication":
+              "t"
+          },
+
+          body: JSON.stringify({
+
+            givenName:
+              givenName,
+
+            familyName:
+              familyName
+
+          })
+        }
+      );
+
+
+    if (!exchangeResponse.ok) {
+
+      throw new Error(
+        "Token exchange failed: " +
+        exchangeResponse.status
+      );
+    }
+
+
+    const exchangeData =
+      await exchangeResponse.json();
+
+
+    /*
+      --------------------------------------------------
+      4. BUILD USEFUL FILE NAME
+
+      Example:
+
+      Taras_Melysh_Unit26_Job12345_Shell_Gas_Card_2026-10-14.jpg
+      --------------------------------------------------
+    */
+
+
+    const extension =
+      file.name.includes(".")
+        ?
+        "." +
+        file.name
+          .split(".")
+          .pop()
+          .replace(
+            /[^a-zA-Z0-9]/g,
+            ""
+          )
+        :
+        "";
+
+
+    function clean(value) {
+
+      return value
+        .trim()
+        .replace(
+          /[^a-zA-Z0-9_-]+/g,
+          "_"
+        )
+        .replace(
+          /^_+|_+$/g,
+          ""
+        );
+    }
+
+
+    const now =
+      new Date();
+
+
+    const dateText =
+      now
+        .toISOString()
+        .slice(0,10);
+
+
+    const parts = [
+
+      clean(employeeName),
+
+      unitNumber
+        ?
+        "Unit" +
+        clean(unitNumber)
+        :
+        "",
+
+      jobNumber
+        ?
+        "Job" +
+        clean(jobNumber)
+        :
+        "",
+
+      clean(paymentMethod),
+
+      dateText
+
+    ]
+    .filter(Boolean);
+
+
+    const uploadFileName =
+      parts.join("_") +
+      extension;
+
+
+    /*
+      --------------------------------------------------
+      5. CREATE SHAREPOINT UPLOAD SESSION
+      --------------------------------------------------
+    */
+
+    const encodedFileName =
+      encodeURIComponent(
+        uploadFileName
+      );
+
+
+    const createSessionUrl =
+
+      SP_ROOT +
+
+      "/_api/v2.1/shares/" +
+
+      SHARE_ID +
+
+      "/driveItem:/" +
+
+      encodedFileName +
+
+      ":/oneDrive.createUploadSession";
+
+
+    const sessionResponse =
+      await fetch(
+        createSessionUrl,
+        {
+
+          method: "POST",
+
+          credentials: "omit",
+
+          headers: {
+
+            "Authorization":
+              "Badger " +
+              exchangeData.token,
+
+            "Content-Type":
+              "application/json",
+
+            "Accept":
+              "application/json",
+
+            "Ignorecookieauthentication":
+              "t"
+          },
+
+          body: JSON.stringify({
+
+            item: {
+              "@name.conflictBehavior":
+                "rename"
+            }
+
+          })
+
+        }
+      );
+
+
+    const sessionText =
+      await sessionResponse.text();
+
+
+    if (!sessionResponse.ok) {
+
+      throw new Error(
+        "Create upload session failed: " +
+        sessionResponse.status +
+        " " +
+        sessionText
+      );
+    }
+
+
+    const sessionData =
+      JSON.parse(sessionText);
+
+
+    if (!sessionData.uploadUrl) {
+
+      throw new Error(
+        "SharePoint did not return an upload URL."
+      );
+    }
+
+
+    /*
+      --------------------------------------------------
+      6. SEND ACTUAL FILE
+      --------------------------------------------------
+    */
+
+    const uploadResponse =
+      await fetch(
+        sessionData.uploadUrl,
+        {
+
+          method: "PUT",
+
+          credentials: "omit",
+
+          headers: {
+
+            "Content-Type":
+              file.type ||
+              "application/octet-stream",
+
+            "Content-Range":
+              "bytes 0-" +
+              (file.size - 1) +
+              "/" +
+              file.size
+
+          },
+
+          body: file
+        }
+      );
+
+
+    const uploadResult =
+      await uploadResponse.text();
+
+
+    if (!uploadResponse.ok) {
+
+      throw new Error(
+        "File upload failed: " +
+        uploadResponse.status +
+        " " +
+        uploadResult
+      );
+    }
+
+
+    console.log(
+      "Receipt uploaded:",
+      uploadFileName
+    );
+
+  }
+
+</script>
 
 </body>
 </html>
