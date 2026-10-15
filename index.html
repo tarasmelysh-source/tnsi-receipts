@@ -276,7 +276,8 @@
 
   const fileNameBox =
     document.getElementById("fileName");
-
+  
+  let uploadComplete = false;
 
   function setStatus(type, message) {
 
@@ -298,7 +299,16 @@
   */
 
   uploadButton.addEventListener("click", () => {
+    if (uploadComplete) {
+      uploadComplete = false;
 
+      fileNameBox.textContent = "";
+
+      statusBox.className = "status";
+      statusBox.textContent = "";
+
+  uploadButton.textContent = "Select Receipt & Upload";
+}
     const employeeName =
       document
         .getElementById("employeeName")
@@ -405,20 +415,17 @@ if (!paymentMethod) {
 
         await uploadReceipt(file);
 
-        setStatus(
-          "success",
-          "Receipt uploaded successfully."
-        );
+      setStatus(
+        "success",
+        "Receipt uploaded successfully."
+      );
 
-        uploadButton.textContent =
-          "Upload Another Receipt";
+      uploadButton.textContent =
+      "Upload Another Receipt";
 
-        /*
-          Clear file selection so another receipt
-          can be selected.
-        */
+      uploadComplete = true;
 
-        fileInput.value = "";
+      fileInput.value = "";
 
 
       } catch (error) {
