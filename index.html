@@ -320,22 +320,49 @@
         .value;
 
 
-    if (!employeeName) {
-      setStatus(
-        "error",
-        "Please enter your name."
-      );
-      return;
-    }
+   if (!employeeName) {
+  setStatus(
+    "error",
+    "Please enter your first and last name."
+  );
+  return;
+}
 
+const nameParts = employeeName
+  .trim()
+  .split(/\s+/);
 
-    if (!paymentMethod) {
-      setStatus(
-        "error",
-        "Please select a payment method."
-      );
-      return;
-    }
+if (nameParts.length < 2) {
+  setStatus(
+    "error",
+    "Please enter both your first and last name."
+  );
+  return;
+}
+
+if (!unitNumber) {
+  setStatus(
+    "error",
+    "Please enter the unit number."
+  );
+  return;
+}
+
+if (!jobNumber) {
+  setStatus(
+    "error",
+    "Please enter the job number."
+  );
+  return;
+}
+
+if (!paymentMethod) {
+  setStatus(
+    "error",
+    "Please select a payment method."
+  );
+  return;
+}
 
 
     fileInput.click();
